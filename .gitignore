@@ -1,0 +1,5 @@
+#Ignore executables
+*.exe
+#Ignore folders
+/vscode_templates
+/4.review

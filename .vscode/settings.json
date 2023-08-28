@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "*.asm": "asm-collection",
+        "iostream": "cpp",
+        "unistd.h": "c",
+        "stdbool.h": "c",
+        "types.h": "c",
+        "wait.h": "c",
+        "string.h": "c",
+        "time.h": "c",
+        "stdlib.h": "c"
+    },
+    "cmake.sourceDirectory": "/home/richard/.vscode-server/extensions/twxs.cmake-0.0.17/node_modules/peg-cmake/test"
+}

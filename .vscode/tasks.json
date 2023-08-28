@@ -1,0 +1,83 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{	//gcc config
+			"type": "cppbuild",
+			"label": "C/C++: gcc build active file (C)",
+			"command": "/usr/bin/gcc",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"-Wall",
+				"-Wextra",
+				"${file}",
+				"-o",
+				"${fileDirname}/${fileBasenameNoExtension}.exe"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"detail": "compiler: /usr/bin/gcc"
+		},
+		{	//g++ OOP config
+			"type": "cppbuild",
+			"label": "C/C++: g++ build active file (OOP)",
+			"command": "/usr/bin/g++",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",
+				"-Wall",
+				"-Wextra",
+				"${file}",
+				"classes/*.cpp",
+				"-I",
+				"headers",
+				"-o",
+				"${fileBasenameNoExtension}.exe"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"detail": "compilador: /usr/bin/g++"
+		},
+		{	//g++ Procedural config
+			"type": "cppbuild",
+			"label": "C/C++: g++ build active file (Procedural)",
+			"command": "/usr/bin/g++",
+			"args": [
+				"-fdiagnostics-color=always",
+				"-g",	
+				"-Wall",
+				"-Wextra",
+				"${file}",
+				"-o",
+				"${fileBasenameNoExtension}.exe"
+			],
+			"options": {
+				"cwd": "${fileDirname}"
+			},
+			"problemMatcher": [
+				"$gcc"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": false
+			},
+			"detail": "compilador: /usr/bin/g++"
+		}
+	]
+}
