@@ -1,0 +1,83 @@
+**Trava com API PThreads e Espera Ocupada**
+
+Você está desenvolvendo um sistema de gerenciamento de estoque para uma loja online. Vários threads precisam acessar e atualizar o estoque simultaneamente. Implemente um mecanismo de trava usando a API PThreads que permita que apenas um thread por vez atualize o estoque. Além disso, implemente a espera ocupada para evitar a criação excessiva de threads bloqueados. Forneça a implementação da trava e um exemplo de uso em que vários threads tentam atualizar o estoque.
+
+1. **Mecanismo de Trava com API PThreads:** Implementar uma trava (mutex) usando a API PThreads para garantir o acesso exclusivo ao estoque.
+
+2. **Espera Ocupada:** Incluir uma estratégia de espera ocupada para evitar a criação excessiva de threads bloqueados. Eles podem usar um loop enquanto esperam que a trava seja adquirida.
+
+3. **Parâmetros do Estoque:** O número total de itens no estoque deve ser definido pelo usuário.
+
+4. **Operações de Atualização:** As threads devem ser capazes de realizar operações de atualização, como adicionar ou subtrair unidades do estoque.
+
+5. **Exemplo de Uso:** Forneça um exemplo de uso em que várias threads tentam acessar e atualizar o estoque simultaneamente, demonstrando que apenas uma thread pode atualizar o estoque por vez.
+
+_______________________________________________________
+
+**Implementação de Semáforos com a biblioteca semaphore.h**
+
+Você está desenvolvendo um sistema de controle de acesso para um prédio de escritórios. Existem várias portas de entrada, e um número limitado de pessoas pode entrar no prédio ao mesmo tempo. Use a biblioteca semaphore.h para implementar um conjunto de semáforos que controle o acesso das pessoas às portas de entrada. Crie uma estrutura que permita que apenas um número especificado de pessoas entre por vez em cada porta. Forneça a implementação dos semáforos e um exemplo que simule pessoas tentando entrar no prédio.
+
+1. **Uso da biblioteca semaphore.h:** Usar a biblioteca `semaphore.h` para implementar os semáforos.
+
+2. **Número de Portas:** O número de portas de entrada disponíveis deve ser definido pelo usuário.
+
+3. **Número de Pessoas Permitidas:** Implementar semáforos que restrinjam o acesso às portas de entrada, permitindo que apenas um número especificado de pessoas entre por vez em cada porta.
+
+4. **Exemplo de Uso:** Criar um exemplo em que várias pessoas tentam entrar no prédio simultaneamente, demonstrando que apenas um número específico de pessoas pode entrar em cada porta ao mesmo tempo.
+
+_______________________________________________________
+
+**Implementação de um Monitor**
+
+Você está criando um sistema de impressão em uma biblioteca. Vários threads representando pedidos de impressão podem chegar simultaneamente, mas apenas uma impressora está disponível para uso. Implemente um monitor que gerencie o acesso concorrente à impressora, garantindo que apenas um pedido de impressão seja processado por vez. Forneça a implementação do monitor e um exemplo que simule vários pedidos de impressão chegando ao sistema.
+
+1. **Implementação de um Monitor:** Os alunos devem implementar um monitor que gerencie o acesso à impressora de forma concorrente.
+
+2. **Impressora Disponível:** A questão deve indicar que apenas uma impressora está disponível para uso.
+
+3. **Pedidos de Impressão:** Os threads devem representar pedidos de impressão que chegam simultaneamente.
+
+4. **Exemplo de Uso:** Os alunos devem fornecer um exemplo em que vários pedidos de impressão chegam ao sistema e são processados pela impressora, garantindo que apenas um pedido seja processado por vez.
+
+_______________________________________________________
+
+**Controle de Acesso a Recursos em um Banco de Dados Distribuído**
+
+Você está desenvolvendo um sistema de gerenciamento de banco de dados distribuído que permite acesso concorrente a várias tabelas. Cada tabela é representada como uma estrutura de dados que precisa ser protegida contra leitura e escrita concorrentes. Implemente um sistema de controle de acesso usando travas, semáforos e monitores para garantir que várias consultas e operações de escrita possam ser executadas de forma segura. Forneça a implementação do sistema de controle de acesso e um exemplo de consultas concorrentes em várias tabelas.
+
+Detalhamento:
+
+1. **Tabelas e Recursos do Banco de Dados:** Definir um número específico de tabelas no banco de dados, cada uma representada como uma estrutura de dados. Determinar o número de consultas de leitura e escrita simultâneas permitidas em cada tabela.
+
+2. **Implementação de Controle de Acesso:** Implementar mecanismos de controle de acesso, incluindo travas, semáforos e/ou monitores, para garantir a consistência dos dados nas tabelas durante consultas e operações de escrita.
+
+3. **Consultas Concorrentes:** Forneça um exemplo de uso em que várias threads realizam consultas concorrentes em diferentes tabelas, demonstrando que os mecanismos de controle de acesso funcionam corretamente e evitam condições de corrida.
+
+_______________________________________________________
+
+**Sistema de Reservas de Voo (Travas e Funções Atômicas)**
+
+Imagine que você está desenvolvendo um sistema de reservas de voo. Vários clientes podem acessar e reservar assentos simultaneamente. Para evitar condições de corrida, você decide implementar travas. Sua tarefa é escrever um programa em C que simule essa situação. O programa deve criar várias threads (clientes) que tentam reservar o mesmo assento. Use a API PThreads para implementar as travas e certifique-se de usar funções atômicas para incremento e teste.
+
+1. **Número de Assentos:** Determine o número total de assentos disponíveis no avião e quantos clientes (threads) tentarão reservar esses assentos simultaneamente.
+
+2. **Implementação das Travas:** Implementar travas (mutexes) para controlar o acesso concorrente aos assentos e garantir que apenas um cliente possa reservar um assento por vez.
+
+3. **Funções Atômicas:** Utilizar funções atômicas, como incremento e teste, para evitar problemas de condição de corrida durante a reserva de assentos.
+
+4. **Exemplo de Uso:** Forneça um exemplo que demonstre várias threads de clientes tentando reservar assentos no avião e como as travas e as funções atômicas garantem que as reservas ocorram de maneira segura.
+
+_______________________________________________________
+
+**Renderização de Imagens (Barreiras)**
+
+Suponha que você está trabalhando em um software de renderização de imagens que divide a imagem em várias partes e cada parte é processada por uma thread separada. No entanto, para combinar corretamente todas as partes da imagem, você precisa esperar que todas as threads terminem de processar suas respectivas partes antes de passar para a próxima etapa. Implemente este cenário usando barreiras com a API PThreads.
+
+1. **Divisão da Imagem:** Determine o tamanho da imagem e quantas partes ela será dividida para processamento paralelo.
+
+2. **Threads de Processamento:** Defina um número adequado de threads para processar cada parte da imagem.
+
+3. **Implementação de Barreiras:** Implementar barreiras para garantir que todas as threads tenham concluído o processamento de suas partes antes de continuar para a próxima etapa.
+
+4. **Exemplo de Uso:** Forneça um exemplo em que várias threads processam partes da imagem simultaneamente e, em seguida, usam a barreira para garantir a sincronização antes da próxima etapa de combinação de imagem.

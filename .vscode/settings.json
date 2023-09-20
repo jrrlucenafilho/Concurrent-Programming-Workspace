@@ -8,7 +8,8 @@
         "wait.h": "c",
         "string.h": "c",
         "time.h": "c",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "pthread.h": "c"
     },
     "cmake.sourceDirectory": "/home/richard/.vscode-server/extensions/twxs.cmake-0.0.17/node_modules/peg-cmake/test"
 }

@@ -1,0 +1,73 @@
+(Questão 1) O que é programação concorrente? Quais são os aspectos a serem 
+observados quando do planejamento de sistemas que utilizam processos 
+concorrentes?
+
+
+É um paradigma de programação que um programa ou processo pode executar outros programas para ajudar em seu processamento.
+
+Consistencia de memoria, quantidade de processos/threads criados, recursos da máquina para executar os processos, e se faz sentido paralelizar o problema.
+Utilização da memória, problemas que façam sentido ser paralelizados, 
+
+
+
+
+(Questão 2) Qual o impacto do advento dos processadores multi-núcleo na 
+implementação e execução de programas que utilizam programação concorrente? 
+
+Permite que se executem multiplos processos de forma simultânea, viabilizando a programação concorrente sem precisar de várias máquinas ligadas em rede
+
+
+
+
+
+
+(Questão 3) O que é, em programação concorrente, consistência de memória?
+Todos os processos devem compartilhar a mesma memória. Dois processos ou thread podem executar o mesmo código ao mesmo tempo. Se uma variavel que tá na memoria for alterada por 1, a memoria deve estar consistente para que na outra thread ela tambem esteja com a memoria 1.
+Todas as threads ou processos devem perceber o mesmo valor num endereço de memoria ou variavel.
+
+• Consistência de memória é a política que determina como e quando mudanças feitas
+por um processador são vistas pelos outros processadores do sistema.
+
+• Um modelo de consistência de memória
+define um contrato entre o software e o
+sistema de memória
+– Se o software obedecer certas regras, o sistema de
+memória funcionará corretamente.
+
+
+
+
+
+
+(Questão 4) O que é um processo? Quais são as informações que compreendem o
+ contexto de um processo? 
+Um processo cria uma cópia do programa até certo ponto, e depois desse ponto ele executa individualmente a lógica do programa.
+Cada processo tem um ID próprio e esse ID pode ser utilizado para executar o programa com uma lógica diferente 
+
+As informações sobre o estado de execução de um programa constituem o
+contexto de um processo.
+ São elas:
+ Código do programa
+ Dados armazenados na memória
+ Pilha de execução
+ Conteúdo dos registradores
+ Descritores dos arquivos abertos
+
+
+
+Questão 5)O que é uma thread? e contexto da thread?
+
+Uma thread é um fluxo único de controle sequencial dentro de um programa.
+é um trecho de código especifico que vai ser executado, e não pode ser mudado.
+
+os componentes contexto de thread são
+ Contador de programa
+ Registradores
+ Pilha de execução
+
+
+
+
+
+
+

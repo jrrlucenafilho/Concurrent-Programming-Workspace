@@ -1,0 +1,58 @@
+1) Uso de mutex
+
+Este exercício simula uma situação de um servidor web que recebe requisições de vários clientes. Para evitar que duas requisições sejam processadas ao mesmo tempo, a variável compartilhada requests é protegida por um mutex.
+
+* Objetivo
+
+Implementar um mutex para proteger a variável compartilhada requests. A variável requests deve ser incrementada em 1 para cada requisição recebida.
+
+* Requisitos
+
+- A variável requests deve ser inicializada em 0.
+- As requisições devem ser processadas de forma sequencial, sem que duas requisições sejam processadas ao mesmo tempo.
+
+* O mutex funciona da seguinte forma:
+
+- A thread que deseja acessar a variável compartilhada requests deve obter o mutex.
+- A thread que obtém o mutex tem acesso exclusivo à variável requests.
+- A thread que terminou de acessar a variável requests deve liberar o mutex.
+- Para implementar o mutex, utilizamos a função pthread_mutex_init() para inicializar o mutex, a função pthread_mutex_lock() para obter o mutex e a função pthread_mutex_unlock() para liberar o mutex.
+
+================================================================
+
+2) Espera ocupada com algoritmo do ticket
+
+Este exercício simula uma situação de um banco de dados que recebe requisições de vários clientes. Para evitar que duas requisições sejam processadas ao mesmo tempo, a variável compartilhada requests é protegida por um algoritmo do ticket com espera ocupada.
+
+* Objetivo
+
+Implementar um algoritmo do ticket para proteger a variável compartilhada requests. A variável requests deve ser incrementada em 1 para cada requisição recebida.
+
+* Requisitos
+
+- A variável requests deve ser inicializada em 0.
+- A variável next_ticket deve ser inicializada em 0.
+- As requisições devem ser processadas de forma sequencial, sem que duas requisições sejam processadas ao mesmo tempo.
+
+* O algoritmo do ticket funciona da seguinte forma:
+
+- Cada thread obtém um ticket, que é um número inteiro.
+- As threads são ordenadas de acordo com seus tickets.
+- A thread com o menor ticket é a primeira a executar a requisição.
+- Para implementar o algoritmo do ticket com espera ocupada, utilizamos a função atômica FETCH AND ADD. A função FETCH AND ADD incrementa o valor de uma variável em 1 de forma atômica, ou seja, sem que outras threads possam interferir no processo.
+
+* Referência para `__atomic_fetch_add` (stdatomic.h) - https://gcc.gnu.org/onlinedocs/gcc/_005f_005fatomic-Builtins.html
+
+int __atomic_fetch_add(int *ptr, int value, int sync);
+Essa função incrementa o valor da variável apontada por ptr em value de forma atômica. O parâmetro sync especifica o tipo de sincronização que deve ser usada. Os valores possíveis para sync são:
+
+__ATOMIC_RELAXED: Sem sincronização.
+__ATOMIC_ACQUIRE: Sincronização antes da leitura.
+__ATOMIC_RELEASE: Sincronização após a escrita.
+__ATOMIC_ACQ_REL: Sincronização antes e após a leitura e escrita.
+__ATOMIC_SEQ_CST: Sincronização sequencial.
+Por exemplo, a seguinte linha de código incrementa o valor da variável requests[ticket] em 1 de forma atômica:
+
+requests[ticket] = __atomic_fetch_add(&requests[ticket], 1, __ATOMIC_ACQUIRE);
+
+A função __atomic_fetch_add() está disponível nos compiladores GNU atuais, incluindo GCC, Clang e ICC.
