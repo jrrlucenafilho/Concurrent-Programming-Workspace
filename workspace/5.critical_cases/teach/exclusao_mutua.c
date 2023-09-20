@@ -34,8 +34,9 @@ void* thread_func(void* p) {
 	main_desc.pos = res;
 	//SECAO CRITICA
 	pthread_mutex_unlock(&mtx); //PROTOCOLO DE SAIDA
-	printf("[%ld] res = %f (%f %f %f)\n",
-			id, res, main_desc.pos, main_desc.vel, main_desc.time);
+	printf("[%ld] res = %f (%f %f %f)\n", id, res, main_desc.pos, main_desc.vel, main_desc.time);
+
+	return 0;
 }
 
 int main(void) {

@@ -55,13 +55,16 @@ void* thread_func(void* p)
 int main(void)
 {
     pthread_t threads[QTD_THREADS];
+
     pthread_mutex_init(&mtx, 0); //Do this to be able to use it here
 
     for(int i = 0; i < QTD_THREADS; i++){
-        pthread_create(&threads[i], 0, thread_func, 0);
+        pthread_create(&threads[i], 0, thread_func, (void*)i);
     }
 
     for(int i = 0; i < QTD_THREADS; i++){
         pthread_join(&threads[i], 0);
     }
+
+    printf("(main) exiting...\n");
 }
