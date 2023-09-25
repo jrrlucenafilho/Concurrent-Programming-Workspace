@@ -9,7 +9,10 @@
         "string.h": "c",
         "time.h": "c",
         "stdlib.h": "c",
-        "pthread.h": "c"
+        "pthread.h": "c",
+        "stdio.h": "c",
+        "type_traits": "c",
+        "semaphore.h": "c"
     },
     "cmake.sourceDirectory": "/home/richard/.vscode-server/extensions/twxs.cmake-0.0.17/node_modules/peg-cmake/test"
 }

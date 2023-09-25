@@ -46,7 +46,7 @@ int main(void) {
 	sem_init(&empty, 0 , 1); //empty = 1
 	sem_init(&full, 0, 0);  //full = 0
 
-	pthread_create(&cons, 0, consumidor, 0);]
+	pthread_create(&cons, 0, consumidor, 0);
 	pthread_create(&prod, 0, produtor, 0);
 
 	pthread_join(cons, 0);
