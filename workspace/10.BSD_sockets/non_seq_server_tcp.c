@@ -5,7 +5,10 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
+#include <stdbool.h>
 
+//Why shouldn't we use processes? Cause forking() it would make 2 sockets for the same port (bruh)
 //Create a file descriptor first
 //Teach said this API is a bit ugly but eh,there's enough docs around
 //Socket: ignore third param
@@ -15,11 +18,35 @@
 #define MAX_CLIENTS 10
 #define SERVER_PORT 9090
 
+//Could add a timeout, if not implemented timeout is infinite
+void* client_handler(void* p)
+{
+    int client_socket = (int)p;
+
+    char buffer_send[1024];
+    char buffer_recv[1024];
+
+    printf("RECEIVED A NEW CONNECTION\n");
+    strcpy(buffer_send, "WELCOME MESSAGE TO CLIENT\n");
+
+    send(client_socket, buffer_send, strlen(buffer_send), 0);
+    printf("Sent: %s\n", buffer_send);
+
+    recv(client_socket, buffer_recv, sizeof(buffer_recv), 0);
+    printf("Client Message: %s\n", buffer_recv);
+
+    close(client_socket);
+
+    printf("Client socked closed!\n");
+}
+
 int main(void)
 {
     int server_socket;
     int client_sockets[MAX_CLIENTS];
     int client_counter = 0;
+
+    pthread_t client_threads[MAX_CLIENTS];
 
     struct sockaddr_in server_addr; //Holds server info
 
@@ -74,25 +101,14 @@ int main(void)
     //                                        (struct sockaddr*)&client_addrs[client_counter],
     //                                        (int)sizeof(client_addrs[client_counter]));
 
-    client_sockets[client_counter] =  accept(server_socket, NULL, NULL);
+    while(true){
 
-    //Now awaiting a msg from client, in a buffer
-    char buffer_send[1024];
-    char buffer_recv[1024];
-
-    printf("RECEIVED A NEW CONNECTION\n");
-
-    strcpy(buffer_send, "MENSAGEM DE BOAS VINDAS AO CLIENTE\n");
-
-    send(client_sockets[client_counter], buffer_send, strlen(buffer_send), 0);
-
-    recv(client_sockets[client_counter], buffer_recv, sizeof(buffer_recv), 0);
-
-    printf("Mensagem do cliente: %s\n", buffer_recv);
-
-    close(client_sockets[client_counter]);
-    close(server_socket);   //And closes after receiving msg from client
-
+        client_sockets[client_counter] =  accept(server_socket, NULL, NULL);
+        pthread_create(&client_threads[client_counter], 0, client_handler, (void*)client_sockets[client_counter]);
+        
+        client_counter = ((client_counter) + 1) % MAX_CLIENTS;
+    
+    }
     return 0;
 
     //Were i to use a while-loop, the msg would only show the welcom msg to the first client

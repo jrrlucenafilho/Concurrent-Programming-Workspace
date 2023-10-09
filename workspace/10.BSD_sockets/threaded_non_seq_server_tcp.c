@@ -5,7 +5,10 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <pthread.h>
+#include <stdbool.h>
 
+//Why shouldn't we use processes? Cause forking() it would make 2 sockets for the same port (bruh)
 //Create a file descriptor first
 //Teach said this API is a bit ugly but eh,there's enough docs around
 //Socket: ignore third param
@@ -15,11 +18,44 @@
 #define MAX_CLIENTS 10
 #define SERVER_PORT 9090
 
+struct client_info {
+    int socket;
+    struct sockaddr_in address;
+};
+
+//Could add a timeout, if not implemented timeout is infinite
+void* client_handler(void* p)
+{
+    struct client_info* c_info = (struct client_info*)p;
+
+    char buffer_send[1024];
+    char buffer_recv[1024];
+    char client_address_str[INET_ADDRSTRLEN];
+
+    inet_ntop(AF_INET, &(c_info->address.sin_addr), client_address_str, INET_ADDRSTRLEN);
+
+    printf("New connection from :%s:%d\n", client_address_str, ntohs(c_info->address.sin_port));
+
+    strcpy(buffer_send, "WELCOME MESSAGE TO CLIENT\n");
+
+    send(c_info->socket, buffer_send, strlen(buffer_send), 0);
+    printf("Sent: %s\n", buffer_send);
+
+    recv(c_info->socket, buffer_recv, sizeof(buffer_recv), 0);
+    printf("Client Message: %s\n", buffer_recv);
+
+    close(c_info->socket);
+
+    printf("Client socked closed!\n");
+}
+
 int main(void)
 {
     int server_socket;
     int client_sockets[MAX_CLIENTS];
     int client_counter = 0;
+
+    pthread_t client_threads[MAX_CLIENTS];
 
     struct sockaddr_in server_addr; //Holds server info
 
@@ -68,31 +104,29 @@ int main(void)
     //Now we're ready to wait for connections
     printf("Awaiting connections...\n");
 
-    //accept'll give me info about the clients who connect
-    //only accept4() receives flags
-    //client_sockets[client_counter] = accept(server_socket,
-    //                                        (struct sockaddr*)&client_addrs[client_counter],
-    //                                        (int)sizeof(client_addrs[client_counter]));
+    while(true){
+        //Create and populate the struct
+        struct sockaddr_in client_address;
+        socklen_t client_address_len = sizeof(client_address);
+        int client_socket = accept(server_socket, (struct sockaddr*)&client_address, &client_address_len);
 
-    client_sockets[client_counter] =  accept(server_socket, NULL, NULL);
+        if(client_socket == -1){
+            perror("accept() error!");
+            continue;
+        }
 
-    //Now awaiting a msg from client, in a buffer
-    char buffer_send[1024];
-    char buffer_recv[1024];
+        printf("Received a new connection!\n");
 
-    printf("RECEIVED A NEW CONNECTION\n");
+        struct client_info* c_info = (struct client_info*) malloc(sizeof(struct client_info));
 
-    strcpy(buffer_send, "MENSAGEM DE BOAS VINDAS AO CLIENTE\n");
+        c_info->socket = client_socket;
+        c_info->address = client_address;
 
-    send(client_sockets[client_counter], buffer_send, strlen(buffer_send), 0);
-
-    recv(client_sockets[client_counter], buffer_recv, sizeof(buffer_recv), 0);
-
-    printf("Mensagem do cliente: %s\n", buffer_recv);
-
-    close(client_sockets[client_counter]);
-    close(server_socket);   //And closes after receiving msg from client
-
+        pthread_create(&client_threads[client_counter], 0, client_handler, (void*)client_sockets[client_counter]);
+        
+        client_counter = ((client_counter) + 1) % MAX_CLIENTS;
+    
+    }
     return 0;
 
     //Were i to use a while-loop, the msg would only show the welcom msg to the first client
