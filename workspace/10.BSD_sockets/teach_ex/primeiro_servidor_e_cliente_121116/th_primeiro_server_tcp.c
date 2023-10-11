@@ -8,7 +8,7 @@
 #include <pthread.h>
 
 #define MAX_CLIENTS 10
-#define SERVER_PORT 9091
+#define SERVER_PORT 9090
 
 struct client_info {
 	int socket;

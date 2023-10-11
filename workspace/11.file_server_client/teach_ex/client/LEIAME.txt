@@ -1,0 +1,3 @@
+- Preferencialmente execute o cliente em um diretorio 
+diferente do diretorio do servidor (para evitar uso
+concorrente do arquivo);
