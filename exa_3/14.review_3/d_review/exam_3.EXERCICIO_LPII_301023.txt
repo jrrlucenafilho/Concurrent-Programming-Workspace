@@ -1,0 +1,55 @@
+(Questão 1) Faça um programa em C/C++ que implemente um servidor que atenda 
+os requisitos listados a seguir.
+
+	1) Receba até 5 conexões simultâneas de clientes na porta 8600 TCP;
+
+	2) Cada cliente recebe uma string de boas vindas ao se conectar ao 
+	servidor (ex. string “WELCOME”);
+
+	3) O servidor tratará strings enviadas pelos clientes como comandos, e 
+	retornára o resultado como descrito a seguir. Os seguintes comandos
+	devem ser suportados: 
+
+		a) BCKWRD <STRING>\n fará o servidor retornar o contrário 
+		da <string> recebida pelos clientes (ex. Caso receba “ABCD”
+		deverá retornar “DCBA”); 
+
+		b) RNDNUM\n o servidor irá gerar e retornar um valor aleatório 
+		entre 0 e 1000;
+
+		c) FINISH\n fará o servidor finalizar a conexão com o cliente;
+
+		d) Comandos não reconhecidos deverão fazer o servidor retornar
+		"ERROR" para os clientes.
+
+Comente o código explicando a diferença entre os papéis de cliente e servidor, 
+ressaltando quais chamadas feitas no código são necessárias no contexto 
+específico do protocolo TCP. Teste o servidor com múltiplos clientes, usando
+instâncias de telnet ou nc (netcat). Todas as mensagens recebidas pelo servidor
+devem ser armazenadas em um arquivo de texto, e o controle de acesso desse
+arquivo deve ser feito por um monitor.
+
+(Questão 2) Faça um programa em C/C++ que atue como um servidor de verificação 
+de palíndromos. O servidor deverá aceitar e tratar até 6 conexões simultâneas 
+de clientes; ao receber uma nova conexão, o servidor deverá dedicar uma thread 
+a ela, para sua correta manipulação. O servidor enviará uma string de boas 
+vindas para cada nova conexão (“BEMVINDO”), e deverá exibir o endereço do novo
+cliente conectado no terminal local. Os clientes poderão enviar uma quantidade 
+arbitrária destrings com até 10 caracteres para o servidor, que deverá 
+responder com “PALINDROMO=TRUE” caso a stringc ontenha um palíndromo e com 
+“PALINDROMO=FALSE” caso a string não contenha um palíndromo. 
+
+Palíndromos são frases ou palavras que podem ser lidas, indiferentemente, da
+esquerda para a direita, conforme o sentido habitual da leitura, ou da direita
+para a esquerda, sem que haja mudança da sua significação (exemplos de 
+palíndromos com 6 letras: “AAAAAA”, “ABAABA”, “ABCCBA”, “MUSSUM”). Caso o 
+cliente insira a string “BYEBYE” sua conexão deverá ser finalizada. O servidor  
+deverá tratar conexões indefinidamente, até que algum cliente insira a string 
+“SHUTDOWN”, aí então o servidor deverá ser finalizado. A implementação deverá 
+ser feita em C/C++ utilizando a biblioteca Pthreads ou as threads STD (C++11) 
+e  biblioteca sockets.h (ou winsock.h). A saída do seu programa deve ser bem 
+planejada, de forma a mostrar o que está acontecendo em cada momento relevante.
+Para testes do servidor, usar netcat (nc) ou telnet para o lado do cliente.
+
+(Questão 3) Fazer o servidor da questão anterior utilizando o protocolo UDP
+para envio e recepção das mensagens.
