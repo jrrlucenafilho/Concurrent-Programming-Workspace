@@ -1,0 +1,54 @@
+Terceira Prova – LPII – UFPB – 2023.1
+Professor: Carlos Eduardo Batista
+ 
+*********** ATENÇÃO!!!!!! LEIA TODAS AS INSTRUÇÕES!!!!!! ***********
+
+- A nota máxima é 10,0 (dez)
+ 
+- As respostas da prova devem ser enviadas por e-mail (para bidu @ ci.ufpb.br)
+ em um ÚNICO arquivo ZIP contendo os códigos solicitados.
+
+- Use como título do e-mail e do arquivo ZIP (questões 1 e 2):
+ "[PROVA03-LPII-231] NOME - MATRICULA" (seu nome e matrícula) e (questão 3)
+ "[PROVA03-LPII-231-Q3] NOME - MATRICULA" (seu nome e matrícula).
+ 
+- TODO CÓDIGO *DEVE* ser comentado com a explicação da lógica principal e demais 
+ informações solicitadas na questão - implementações sem comentários serão 
+ desconsideradas.
+ 
+- Plágio será punido com a perda da pontuação das respostas (por todos os
+ participantes). Ferramentas automáticas serão utilizadas para detecção de plágio.
+
+- O código não poderá ser majoritariamente gerado por ferramentas automáticas.
+Todo código será analisado por ferramentas de detecção de uso de ChatGPT, co-pilot
+etc. e a pontuação será reduzida de forma proporcional ao uso excessivo.
+ 
+- O envio das questões 1 e 2 deverá ser feito até as 12h do dia 06/11/2023
+
+- O envio da questão 3 deverá ser feito até as 14h do dia 07/11/2023
+ 
+*********** ATENÇÃO!!!!!! LEIA TODAS AS INSTRUÇÕES!!!!!! ***********
+_______________________________________________________________________________
+
+(Questão 3) Usando TCP e UDP (4,0 pontos)
+
+Faça um programa em C/C++ que implemente um servidor TCP que atenda aos 
+requisitos listados a seguir.
+
+- O servidor deve receber até 10 conexões simultâneas de clientes na porta 
+  9600 TCP.
+
+- Cada cliente envia uma mensagem contendo um valor inteiro.
+
+- Esse valor inteiro é a porta UDP que o cliente estará aguardando uma 
+  mensagem.
+
+- O servidor então envia uma mensagem contendo um número aleatório para a porta
+  UDP informada pelo cliente.
+
+- Caso o cliente envie 0, o servidor deve ser finalizado.
+
+- Teste o servidor usando telnet e netcat (ou implemente um cliente que atenda
+  os requisitos).
+
+_______________________________________________________________________________
