@@ -10,7 +10,7 @@
 #include <time.h>
 
 #define MAX_CLIENTS 10
-#define TCP_SERVER_PORT 9601
+#define TCP_SERVER_PORT 9600
 #define BUFFER_SIZE 1024
 
 //Will hold both server and client values
@@ -61,10 +61,10 @@ void* handle_client(void* p)
         //Checks if user entered a 0, and closes connection if so
         if(udp_port_int == 0){
             //Notifies server about closing connection
-            printf("Client %d inserted 0, closing connection...\n", socket_pair->client_socket);
+            printf("Client %d inserted 0, shutting down this server...\n", socket_pair->client_socket);
 
             //Notifies client
-            strcpy(buffer_send, "0 INSERTED BY CLIENT, CLOSING CONNECTION...\n");
+            strcpy(buffer_send, "0 INSERTED BY CLIENT, SHUTTING DOWN SERVER...\n");
             send(socket_pair->client_socket, buffer_send, strlen(buffer_send), 0);
 
             //Sets the close SERVER flag to true to finalize the server, as asked by the specification
@@ -189,7 +189,6 @@ int main(void)
 
         //Checks if the client inserted a '0'. Which means the server must be finalized 
         if(socket_pair->close_server_flag){
-            printf("Server is shutting down as requested by client %d...\n", socket_pair->client_socket);
             close(socket_pair->server_socket);
             free(socket_pair);
             exit(0);
