@@ -96,10 +96,11 @@ void* handle_client(void* p)
 		unsigned int cli_addr_len = sizeof(client_addr);
 
         //To receive the random number to the terminal:
-        //First send the random number to and udp port through the tcp server.
+        //Testado e Funcionando:
+        //First send the random number to an udp port through the tcp server.
         //Then:
         //nc -u localhost <udp port sent to tcp server> and press enter enter
-        //It prints: RANDOM NUMBER RECEIVED: <random number>
+        //It prints: RANDOM NUMBER RECEIVED: <random number> on the udp client-side
 
         //Now to actually send the random number to the udp server, since it's been bound already
         //Making the random number
