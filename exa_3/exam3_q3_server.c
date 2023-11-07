@@ -10,13 +10,21 @@
 #include <time.h>
 
 #define MAX_CLIENTS 10
-#define TCP_SERVER_PORT 9600
+#define TCP_SERVER_PORT 9601
 #define BUFFER_SIZE 1024
+
+//Will hold both server and client values
+//Done this way so it can close the client AND the SERVER if the client sends 0 (with the flag)
+typedef struct {
+    int server_socket;
+    int client_socket;
+    bool close_server_flag;
+} socket_pair_t;
 
 //Client handler
 void* handle_client(void* p)
 {
-	int client_socket = (int)p;
+	socket_pair_t* socket_pair = (socket_pair_t*)p;
 
 	char integer_prompt_to_client[BUFFER_SIZE] = "AWAITING FOR CLIENT INTEGER INPUT (UDP PORT NUMBER): ";
     char random_number_announcement_to_udp[BUFFER_SIZE] = "RANDOM NUMBER RECEIVED: ";
@@ -25,27 +33,27 @@ void* handle_client(void* p)
 
     int udp_port_int;
 
-    //Stuff regarding the udp port connection
+    //Vars regarding the udp port connection
     int udp_server_fd;
     struct sockaddr_in server_addr;
     char random_num_buffer[BUFFER_SIZE];
 
 	//Notifies the server of connection
-	printf("\nNew connection from client: %d\n", client_socket);
+	printf("\nNew connection from client: %d\n", socket_pair->client_socket);
 
     while(true){
         //Tells server that's it's waiting for user input
         printf("Awaiting integer (UDP Port number) from client...\n");
 
         //Sends prompt to client
-        send(client_socket, integer_prompt_to_client, strlen(integer_prompt_to_client), 0);
+        send(socket_pair->client_socket, integer_prompt_to_client, strlen(integer_prompt_to_client), 0);
         
         //And awaits to receive the number (udp port number)
-        recv(client_socket, buffer_recv, sizeof(buffer_recv), 0);
+        recv(socket_pair->client_socket, buffer_recv, sizeof(buffer_recv), 0);
         buffer_recv[strlen(buffer_recv)] = '\0'; //cleaning '\n'
 
         //Notify server of receiving the number (still as a string)
-        printf("\nClient %d sent: %s\n", client_socket, buffer_recv);
+        printf("\nClient %d sent: %s\n", socket_pair->client_socket, buffer_recv);
 
         //Now transforms string received to number that'll be the udp port
         udp_port_int = atoi(buffer_recv);
@@ -53,16 +61,19 @@ void* handle_client(void* p)
         //Checks if user entered a 0, and closes connection if so
         if(udp_port_int == 0){
             //Notifies server about closing connection
-            printf("Client %d inserted 0, closing connection...\n", client_socket);
+            printf("Client %d inserted 0, closing connection...\n", socket_pair->client_socket);
 
             //Notifies client
             strcpy(buffer_send, "0 INSERTED BY CLIENT, CLOSING CONNECTION...\n");
-            send(client_socket, buffer_send, strlen(buffer_send), 0);
+            send(socket_pair->client_socket, buffer_send, strlen(buffer_send), 0);
 
-            //Closes connection and exits
-            close(client_socket);
+            //Sets the close SERVER flag to true to finalize the server, as asked by the specification
+            socket_pair->close_server_flag = true;
 
-            return 0;
+            //Closes connection with client
+            close(socket_pair->client_socket);
+
+            exit(0);
         }
 
         //If it got here, it means udp_port_int holds a udp port number inserted by the client
@@ -100,7 +111,7 @@ void* handle_client(void* p)
         //First send the random number to an udp port through the tcp server.
         //Then:
         //nc -u localhost <udp port sent to tcp server> and press enter enter
-        //It prints: RANDOM NUMBER RECEIVED: <random number> on the udp client-side
+        //It prints: RANDOM NUMBER RECEIVED: <random number> on the udp client's side
 
         //Now to actually send the random number to the udp server, since it's been bound already
         //Making the random number
@@ -116,11 +127,17 @@ void* handle_client(void* p)
         //To establish connection
         recvfrom(udp_server_fd, buffer_recv, sizeof(buffer_recv), 0, (struct sockaddr*)&client_addr, &cli_addr_len);
 
-        //First sending the random number announcement to the udp server
+        //Concatenating random number string to end of announcement string
+        strcat(random_number_announcement_to_udp, random_num_buffer);
+
+        //Sending the announcement + random number to selected udp port
         sendto(udp_server_fd, random_number_announcement_to_udp, strlen(random_number_announcement_to_udp), 0, (struct sockaddr*) &client_addr, cli_addr_len);
 
-        //Sending the random number to selected udp port
-        sendto(udp_server_fd, random_num_buffer, strlen(random_num_buffer), 0, (struct sockaddr*) &client_addr, cli_addr_len);
+        //Removing random_num_buffer from random_number_announcement_to_udp to clear the number for next iteration
+        //(so it doesn't keep just appending the number over and over ad-hoc)
+        char* substring_position = strstr(random_number_announcement_to_udp, random_num_buffer);
+        size_t length_to_remove = strlen(random_num_buffer);
+        memmove(substring_position, substring_position + length_to_remove, strlen(substring_position + length_to_remove) + 1);
 
         //And then closing the UDP connection
         close(udp_server_fd);
@@ -131,14 +148,14 @@ void* handle_client(void* p)
 
 int main(void)
 {
-    int server_socket;
+    socket_pair_t* socket_pair = (socket_pair_t *)malloc(sizeof(socket_pair_t));
     struct sockaddr_in server_addr;
     pthread_t client_threads[MAX_CLIENTS];
     int client_counter = 0;
 
-    server_socket = socket(AF_INET, SOCK_STREAM, 0);
+    socket_pair->server_socket = socket(AF_INET, SOCK_STREAM, 0);
 
-    if(server_socket == -1){
+    if(socket_pair->server_socket == -1){
         perror("socket() error!");
         exit(1);
     }
@@ -147,14 +164,14 @@ int main(void)
     server_addr.sin_port = htons(TCP_SERVER_PORT);
     server_addr.sin_addr.s_addr = INADDR_ANY;
 
-    int bind_res = bind(server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr));
+    int bind_res = bind(socket_pair->server_socket, (struct sockaddr*)&server_addr, sizeof(server_addr));
 
 	if(bind_res == -1){
 		perror("bind() error!");
 		exit(1);
 	}
 
-	int listen_res = listen(server_socket, MAX_CLIENTS);
+	int listen_res = listen(socket_pair->server_socket, MAX_CLIENTS);
 
 	if(listen_res == -1){
 		perror("listen() error!");
@@ -164,14 +181,22 @@ int main(void)
     printf("Waiting for new connections on port %d...\n", TCP_SERVER_PORT);
 
     while(true){
-		int client_socket = accept(server_socket, NULL, NULL);
+		socket_pair->client_socket = accept(socket_pair->server_socket, NULL, NULL);
 
-		pthread_create(&client_threads[client_counter], NULL, handle_client, (void*)client_socket);
+		pthread_create(&client_threads[client_counter], NULL, handle_client, (void*)socket_pair);
 
 		client_counter = ((client_counter + 1) % MAX_CLIENTS);
+
+        //Checks if the client inserted a '0'. Which means the server must be finalized 
+        if(socket_pair->close_server_flag){
+            printf("Server is shutting down as requested by client %d...\n", socket_pair->client_socket);
+            close(socket_pair->server_socket);
+            free(socket_pair);
+            exit(0);
+        }
 	}
 
-	close(server_socket);
+	close(socket_pair->server_socket);
 
 	return 0;
 }
