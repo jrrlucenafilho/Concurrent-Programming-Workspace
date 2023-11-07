@@ -112,6 +112,7 @@ void* handle_client(void* p)
         //Then:
         //nc -u localhost <udp port sent to tcp server> and press enter enter
         //It prints: RANDOM NUMBER RECEIVED: <random number> on the udp client's side
+        //Pressing enter to receive each new random value in udp server on the terminal window
 
         //Now to actually send the random number to the udp server, since it's been bound already
         //Making the random number
